@@ -1,7 +1,27 @@
 import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
+
+/**
+ * Minimal Slot implementation — renders the child element with merged props.
+ * Replaces @radix-ui/react-slot to avoid React 19 peer-dep issues on Vercel.
+ */
+function Slot({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }) {
+  if (React.isValidElement(children)) {
+    return React.cloneElement(children, {
+      ...props,
+      ...(children.props as Record<string, unknown>),
+      className: cn(
+        (props as Record<string, unknown>).className as string | undefined,
+        (children.props as Record<string, unknown>).className as string | undefined
+      ),
+    })
+  }
+  return <>{children}</>
+}
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
@@ -42,9 +62,18 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, className }))}
+          {...(props as React.HTMLAttributes<HTMLElement>)}
+        >
+          {props.children}
+        </Slot>
+      )
+    }
     return (
-      <Comp
+      <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
