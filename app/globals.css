@@ -1,37 +1,82 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════
+   NEXUS-0.1 Design System — PlumbingHQ
+   Premium dark-mode-first token system
+   ═══════════════════════════════════════════════════════ */
+
 :root {
-  --background: #0A0A0F;
-  --foreground: #EDEDED;
-  --surface: #111118;
-  --surface-elevated: #1A1A24;
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.12);
+  /* ── Core Surfaces ── */
+  --background: #07070D;
+  --foreground: #F0F0F5;
+  --surface: #0E0E18;
+  --surface-elevated: #161624;
+  --surface-glass: rgba(255, 255, 255, 0.04);
+
+  /* ── Border System (3-tier) ── */
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.14);
+
+  /* ── Brand: Trust Blues ── */
   --trust-blue: #1E3A5F;
-  --trust-indigo: #2563EB;
+  --trust-indigo: #3B82F6;
+
+  /* ── Brand: Action Orange (CTA) ── */
   --cta-orange: #F97316;
   --cta-orange-hover: #FB923C;
+  --cta-glow: rgba(249, 115, 22, 0.25);
+
+  /* ── Semantic: Status ── */
   --emergency-red: #EF4444;
-  --muted: rgba(255, 255, 255, 0.5);
-  --muted-dim: rgba(255, 255, 255, 0.3);
+  --success-green: #22C55E;
+
+  /* ── Text Hierarchy ── */
+  --text-primary: #F0F0F5;
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-tertiary: rgba(255, 255, 255, 0.40);
+  --text-muted: rgba(255, 255, 255, 0.25);
+
+  /* ── Fluid Typography ── */
+  --text-hero: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  --text-h2: clamp(1.875rem, 3vw + 0.5rem, 3rem);
+  --text-h3: clamp(1.25rem, 1.5vw + 0.5rem, 1.5rem);
+  --text-body: clamp(1rem, 0.5vw + 0.875rem, 1.125rem);
+
+  /* ── Animation Curves ── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
+/* ── Tailwind v4 Theme Bindings ── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-surface-elevated: var(--surface-elevated);
+  --color-surface-glass: var(--surface-glass);
   --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
   --color-border-hover: var(--border-hover);
   --color-trust-blue: var(--trust-blue);
   --color-trust-indigo: var(--trust-indigo);
   --color-cta-orange: var(--cta-orange);
   --color-cta-orange-hover: var(--cta-orange-hover);
+  --color-cta-glow: var(--cta-glow);
   --color-emergency-red: var(--emergency-red);
-  --color-muted: var(--muted);
-  --color-muted-dim: var(--muted-dim);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-success-green: var(--success-green);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-jakarta);
+}
+
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -40,13 +85,80 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-@media (prefers-reduced-transparency) {
-  .backdrop-blur-\[12px\] {
-    backdrop-filter: none !important;
-    background: var(--surface) !important;
+/* ── Animation Keyframes ── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-html {
-  scroll-behavior: smooth;
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--cta-glow), 0 0 60px rgba(249, 115, 22, 0.1); }
+  50% { box-shadow: 0 0 30px var(--cta-glow), 0 0 80px rgba(249, 115, 22, 0.15); }
+}
+
+@keyframes counter-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Utility Classes ── */
+.animate-fade-up {
+  animation: fade-up 0.6s var(--ease-out-expo) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s var(--ease-out-expo) both;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Staggered delays for lists */
+.stagger-1 { animation-delay: 100ms; }
+.stagger-2 { animation-delay: 200ms; }
+.stagger-3 { animation-delay: 300ms; }
+.stagger-4 { animation-delay: 400ms; }
+.stagger-5 { animation-delay: 500ms; }
+.stagger-6 { animation-delay: 600ms; }
+
+/* ── Accessibility ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-reduced-transparency) {
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    background: var(--surface) !important;
+  }
 }

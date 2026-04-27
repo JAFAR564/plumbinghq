@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -36,6 +39,51 @@ export const metadata: Metadata = {
   },
 };
 
+/** JSON-LD Structured Data for LocalBusiness (Google Rich Results) */
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Plumber",
+  name: "PlumbingHQ",
+  description:
+    "24/7 emergency plumbing services across the Cape Winelands. Burst pipes, geyser repair, drain unblocking, leak detection.",
+  url: "https://plumbinghq.co.za",
+  telephone: "+27213305781",
+  email: "info@plumbinghq.co.za",
+  areaServed: [
+    { "@type": "City", name: "Stellenbosch" },
+    { "@type": "City", name: "Paarl" },
+    { "@type": "City", name: "Franschhoek" },
+    { "@type": "City", name: "Wellington" },
+    { "@type": "City", name: "Durbanville" },
+    { "@type": "City", name: "Somerset West" },
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressRegion: "Western Cape",
+    addressCountry: "ZA",
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ],
+    opens: "00:00",
+    closes: "23:59",
+  },
+  priceRange: "$$",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    reviewCount: "127",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -44,8 +92,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${inter.variable} ${jakarta.variable} h-full antialiased dark`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
       </body>
