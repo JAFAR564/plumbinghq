@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0A0A0F;
+  --foreground: #EDEDED;
+  --surface: #111118;
+  --surface-elevated: #1A1A24;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --trust-blue: #1E3A5F;
+  --trust-indigo: #2563EB;
+  --cta-orange: #F97316;
+  --cta-orange-hover: #FB923C;
+  --emergency-red: #EF4444;
+  --muted: rgba(255, 255, 255, 0.5);
+  --muted-dim: rgba(255, 255, 255, 0.3);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-hover: var(--border-hover);
+  --color-trust-blue: var(--trust-blue);
+  --color-trust-indigo: var(--trust-indigo);
+  --color-cta-orange: var(--cta-orange);
+  --color-cta-orange-hover: var(--cta-orange-hover);
+  --color-emergency-red: var(--emergency-red);
+  --color-muted: var(--muted);
+  --color-muted-dim: var(--muted-dim);
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@media (prefers-reduced-transparency) {
+  .backdrop-blur-\[12px\] {
+    backdrop-filter: none !important;
+    background: var(--surface) !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
