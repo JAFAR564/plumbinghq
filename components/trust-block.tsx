@@ -1,4 +1,7 @@
-import { ShieldCheck, Award, Clock, Users } from "lucide-react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { ShieldCheck, Award, Clock, Users, Star } from "lucide-react";
 
 const trustSignals = [
   {
@@ -28,75 +31,124 @@ const transformations = [
     before: "Ruptured geyser flooding ceiling at 11PM",
     after: "Replaced, tested, and cleaned up by midnight",
     metric: "< 2 hrs",
+    rating: 5,
   },
   {
     before: "Recurring drain blockage every 3 months",
     after: "CCTV inspection + root cut — no blockage in 14 months",
     metric: "Permanent fix",
+    rating: 5,
   },
   {
     before: "Hidden slab leak causing R4,200/month water bill",
     after: "Acoustic detection + 1-point repair — bill dropped to R680",
     metric: "84% savings",
+    rating: 5,
   },
 ];
 
 export function TrustBlock() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setInView(true); },
+      { threshold: 0.15 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="relative px-4 py-20 sm:py-28">
+    <section id="trust" className="relative px-4 py-24 sm:py-32">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-[#0C0E18] to-background" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(30,58,95,0.1),transparent_60%)]" />
 
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <div className="mb-4 text-sm font-medium uppercase tracking-widest text-orange-400/80">
+      <div ref={ref} className="relative z-10 mx-auto max-w-6xl">
+        <div
+          className={`mb-4 text-sm font-semibold uppercase tracking-widest text-cta-orange/80 transition-all duration-600 ${
+            inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+        >
           Why homeowners trust us
         </div>
-        <h2 className="max-w-lg text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+        <h2
+          className={`max-w-lg font-[family-name:var(--font-jakarta)] font-bold leading-tight tracking-tight text-white transition-all duration-600 delay-100 ${
+            inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+          style={{ fontSize: "var(--text-h2)" }}
+        >
           Real fixes. Real warranty.
           <br />
-          <span className="text-white/50">No comeback jobs.</span>
+          <span className="text-text-tertiary">No comeback jobs.</span>
         </h2>
 
-        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {trustSignals.map((signal) => (
+        {/* Trust Signal Grid */}
+        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {trustSignals.map((signal, i) => (
             <div
               key={signal.label}
-              className="group rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-[8px] transition-all duration-300 hover:border-white/[0.1] hover:bg-white/[0.05]"
+              className="group rounded-2xl border border-border-default bg-surface-glass p-6 backdrop-blur-sm transition-all duration-300 hover:border-border-hover hover:bg-white/[0.05] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
+              style={{
+                transitionDelay: inView ? `${(i + 1) * 100}ms` : "0ms",
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateY(0)" : "translateY(16px)",
+              }}
             >
-              <signal.icon className="mb-4 h-6 w-6 text-orange-400/70 transition-colors group-hover:text-orange-400" />
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-cta-orange/10 transition-all group-hover:bg-cta-orange/15 group-hover:shadow-[0_0_16px_rgba(249,115,22,0.1)]">
+                <signal.icon className="h-5 w-5 text-cta-orange" />
+              </div>
               <div className="text-base font-semibold text-white">{signal.label}</div>
-              <p className="mt-2 text-sm leading-relaxed text-white/40">{signal.detail}</p>
+              <p className="mt-2 text-sm leading-relaxed text-text-tertiary">{signal.detail}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-16">
-          <h3 className="mb-8 text-lg font-semibold text-white/70">
-            Before → After
+        {/* Before → After Transformations */}
+        <div className="mt-20">
+          <h3
+            className={`mb-10 font-[family-name:var(--font-jakarta)] text-lg font-semibold text-text-secondary transition-all duration-600 ${
+              inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            Real results from real emergencies
           </h3>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {transformations.map((t) => (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+            {transformations.map((t, i) => (
               <div
                 key={t.before}
-                className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 backdrop-blur-[8px]"
+                className="group rounded-2xl border border-border-default bg-surface-glass p-6 backdrop-blur-sm transition-all duration-300 hover:border-border-hover"
+                style={{
+                  transitionDelay: inView ? `${600 + i * 150}ms` : "0ms",
+                  opacity: inView ? 1 : 0,
+                  transform: inView ? "translateY(0)" : "translateY(16px)",
+                }}
               >
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-red-400/60">
+                {/* Star Rating */}
+                <div className="mb-4 flex gap-0.5">
+                  {Array.from({ length: t.rating }).map((_, j) => (
+                    <Star key={j} className="h-4 w-4 text-amber-400 fill-amber-400" />
+                  ))}
+                </div>
+
+                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-red-400/70">
                   Before
                 </div>
-                <p className="text-sm text-white/50">{t.before}</p>
+                <p className="text-sm text-text-tertiary">{t.before}</p>
 
-                <div className="my-4 flex items-center gap-2">
-                  <div className="h-px flex-1 bg-gradient-to-r from-red-500/20 to-orange-500/40" />
-                  <span className="rounded-full bg-orange-500/10 px-2.5 py-0.5 text-xs font-bold text-orange-400">
+                <div className="my-4 flex items-center gap-3">
+                  <div className="h-px flex-1 bg-gradient-to-r from-red-500/20 to-cta-orange/30" />
+                  <span className="rounded-full border border-cta-orange/20 bg-cta-orange/10 px-3 py-1 text-xs font-bold text-cta-orange">
                     {t.metric}
                   </span>
-                  <div className="h-px flex-1 bg-gradient-to-l from-red-500/20 to-orange-500/40" />
+                  <div className="h-px flex-1 bg-gradient-to-l from-red-500/20 to-cta-orange/30" />
                 </div>
 
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-green-400/60">
+                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-success-green/70">
                   After
                 </div>
-                <p className="text-sm text-white/70">{t.after}</p>
+                <p className="text-sm text-text-secondary">{t.after}</p>
               </div>
             ))}
           </div>
